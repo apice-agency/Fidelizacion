@@ -2,7 +2,7 @@
 /* ============ CONFIGURACIÓN: editá esto para cada local ============ */
 const CONFIG = {
   nombreLocal: "La Brasa",
-  whatsappNegocio: "5492665263564",   // con código de país, sin + ni espacios
+  whatsappNegocio: "5492656445625",   // con código de país, sin + ni espacios
   sellosMeta: 5,                      // el valor real lo manda el servidor; este es de respaldo
   mensajeBienvenida: "Hola! Me sumé al Club desde el QR. Quiero recibir las promos.",
   // URL de la implementación de Apps Script (termina en /exec).
