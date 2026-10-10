@@ -1,0 +1,230 @@
+
+  /* ============ TEMA: cambiá estos valores para cada local ============ */
+  :root {
+    --tinto: #6E1423;        /* fondo principal */
+    --mostaza: #F2B632;      /* acento: botón */
+    --chimichurri: #2E5E3E;  /* confirmaciones */
+    --papel: #F7F7F5;        /* ticket */
+    --tinta: #241A1A;        /* texto sobre el ticket */
+    --tinta-suave: #5E5252;  /* texto secundario */
+    --premio: #A9780C;       /* casillero del premio */
+    --error: #B3261E;
+    --display: "Alfa Slab One", Georgia, "Times New Roman", serif;
+    --texto: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--tinto);
+    color: #fff;
+    font-family: var(--texto);
+    font-size: 17px;
+    line-height: 1.5;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+
+  .wrap { width: 100%; max-width: 460px; margin: 0 auto; padding: 28px 20px 40px; }
+
+  /* ---------- Cabecera ---------- */
+  .marca {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    letter-spacing: .01em;
+    margin: 0 0 28px;
+    color: var(--mostaza);
+  }
+  h1 {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: clamp(2.1rem, 9.5vw, 3.2rem);
+    line-height: 1.06;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+  .bajada { margin: 0 0 30px; max-width: 36ch; color: rgba(255,255,255,.88); }
+
+  /* ---------- Ticket ---------- */
+  .ticket {
+    position: relative;
+    background: var(--papel);
+    color: var(--tinta);
+    border-radius: 14px;
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,.55);
+    animation: imprimir .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes imprimir {
+    from { transform: translateY(-14px); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+  }
+
+  .ticket-cabeza { padding: 22px 22px 20px; }
+  .ticket-cabeza .valor {
+    font-family: var(--display);
+    font-size: 1.55rem;
+    line-height: 1.1;
+    margin: 0 0 4px;
+    color: var(--tinto);
+  }
+  .ticket-cabeza p { margin: 0; color: var(--tinta-suave); font-size: .95rem; }
+
+  .corte { position: relative; height: 0; border-top: 2px dashed #CFC9C9; margin: 0 18px; }
+  .corte::before, .corte::after {
+    content: "";
+    position: absolute;
+    top: -13px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--tinto);
+  }
+  .corte::before { left: -30px; }
+  .corte::after  { right: -30px; }
+
+  .ticket-cuerpo { padding: 22px; }
+  .reingreso { margin: 0 0 18px; font-size: .92rem; color: var(--tinta-suave); }
+
+  /* ---------- Formulario ---------- */
+  .campo { margin-bottom: 16px; }
+  label, .etiqueta { display: block; font-weight: 600; font-size: .95rem; margin-bottom: 6px; }
+  .opcional { font-weight: 400; color: var(--tinta-suave); }
+
+  input[type="text"], input[type="tel"], select {
+    width: 100%;
+    font: inherit;
+    color: var(--tinta);
+    background: #fff;
+    border: 1.5px solid #B9B1B1;
+    border-radius: 10px;
+    padding: 13px 14px;
+    min-height: 50px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%235E5252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+  input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+    outline: 3px solid var(--mostaza);
+    outline-offset: 2px;
+  }
+  input:focus, select:focus { border-color: var(--tinto); }
+  .invalido { border-color: var(--error) !important; }
+  .error-msg { color: var(--error); font-size: .88rem; margin: 6px 0 0; }
+  .error-msg:empty { display: none; }
+
+  .cumple { display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px; }
+
+  .consent {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin: 20px 0 22px;
+    font-size: .88rem; line-height: 1.45;
+    color: var(--tinta-suave);
+  }
+  .consent input { flex: none; width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--tinto); }
+  .consent label { font-weight: 400; font-size: inherit; margin: 0; }
+
+  .boton {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 14px 18px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--mostaza);
+    color: #2A1A00;
+    font: 700 1.05rem/1.2 var(--texto);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .boton:hover { filter: brightness(.96); }
+  .boton:active { transform: translateY(1px); }
+  .boton[disabled] { opacity: .65; cursor: wait; }
+
+  .link-simple {
+    display: block;
+    margin: 14px auto 0;
+    text-align: center;
+    color: var(--tinto);
+    font-weight: 600;
+    font-size: .95rem;
+  }
+  .legal { margin: 14px 0 0; font-size: .8rem; color: var(--tinta-suave); }
+
+  /* ---------- Confirmación + tarjeta de sellos ---------- */
+  #exito { display: none; }
+  .confirmado #formulario-bloque,
+  .confirmado .ticket-cabeza,
+  .confirmado .corte { display: none; }
+  .confirmado #exito { display: block; }
+
+  .exito-titulo {
+    font-family: var(--display);
+    font-weight: 400;
+    font-size: 1.7rem; line-height: 1.12;
+    margin: 0 0 8px;
+    color: var(--tinto);
+  }
+  .exito-titulo:focus { outline: none; }
+  .exito-texto { margin: 0; color: var(--tinta); }
+  .exito-texto.destacado { font-weight: 600; color: var(--chimichurri); }
+
+  .sellos { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 8px; }
+  .sello {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 2px dashed #BDB5B5;
+    display: grid; place-items: center;
+    font-family: var(--display);
+    font-size: 1.25rem;
+    line-height: 1;
+    color: transparent;
+  }
+  .sello.premio { border-color: var(--premio); color: var(--premio); }
+  .sello.lleno {
+    border: 4px double var(--tinto);
+    color: var(--tinto);
+    background: rgba(110, 20, 35, .07);
+    transform: rotate(var(--giro, -6deg));
+  }
+  .sello.nuevo { animation: sellar .5s cubic-bezier(.2,.9,.3,1.25) .3s both; }
+  @keyframes sellar {
+    from { transform: rotate(-20deg) scale(1.9); opacity: 0; }
+    to   { transform: rotate(var(--giro, -6deg)) scale(1); opacity: 1; }
+  }
+  .sellos-cuenta { margin: 0 0 22px; font-size: .92rem; color: var(--tinta-suave); }
+
+  .canje {
+    display: none;
+    margin: 0 0 22px;
+    padding: 14px 16px;
+    border: 2px dashed var(--chimichurri);
+    border-radius: 12px;
+    color: var(--chimichurri);
+    font-weight: 600;
+  }
+  .canje.visible { display: block; }
+
+  .paso-wsp { font-size: .95rem; color: var(--tinta-suave); margin: 0 0 14px; }
+
+  /* ---------- Beneficios ---------- */
+  .beneficios { margin: 34px 0 0; padding: 0; list-style: none; }
+  .beneficios li { padding: 14px 0; border-top: 1px solid rgba(255,255,255,.18); }
+  .beneficios li:last-child { border-bottom: 1px solid rgba(255,255,255,.18); }
+  .beneficios strong { display: block; font-size: 1.02rem; }
+  .beneficios span { color: rgba(255,255,255,.78); font-size: .95rem; }
+
+  .pie { margin-top: 26px; font-size: .8rem; color: rgba(255,255,255,.6); }
+
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticket, .sello.nuevo { animation: none; }
+    .boton { transition: none; }
+  }

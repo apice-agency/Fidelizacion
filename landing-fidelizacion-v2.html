@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sumate al Club · La Brasa</title>
+<meta name="description" content="Juntá sellos en cada visita y llevate un plato libre.">
+<meta name="theme-color" content="#6E1423">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap" id="app">
+
+  <p class="marca" id="marca">La Brasa</p>
+
+  <h1 id="titular">Juntá 5 sellos y tu próximo plato va por la casa.</h1>
+  <p class="bajada">Sumate al Club y marcá un sello en cada visita. Te avisamos primero de las promos, solo por WhatsApp.</p>
+
+  <section class="ticket" aria-labelledby="valor-titulo">
+    <div class="ticket-cabeza">
+      <p class="valor" id="valor-titulo">Plato libre</p>
+      <p id="valor-detalle">Con 5 sellos. Se canjea pidiendo una bebida.</p>
+    </div>
+    <div class="corte" aria-hidden="true"></div>
+
+    <div class="ticket-cuerpo">
+
+      <!-- FORMULARIO -->
+      <div id="formulario-bloque">
+        <p class="reingreso">¿Ya sos del Club? Poné tu nombre y tu WhatsApp otra vez y te sumamos el sello.</p>
+        <form id="form" novalidate autocomplete="on">
+          <div class="campo">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" autocomplete="given-name" autocapitalize="words" required>
+            <p class="error-msg" id="err-nombre" role="alert"></p>
+          </div>
+
+          <div class="campo">
+            <label for="whatsapp">WhatsApp</label>
+            <input type="tel" id="whatsapp" name="whatsapp" inputmode="tel" autocomplete="tel" placeholder="Ej: 11 2345 6789" required>
+            <p class="error-msg" id="err-whatsapp" role="alert"></p>
+          </div>
+
+          <div class="campo">
+            <span class="etiqueta" id="cumple-label">Cumpleaños <span class="opcional">(opcional, te mandamos un regalo)</span></span>
+            <div class="cumple" role="group" aria-labelledby="cumple-label">
+              <select id="dia" name="dia" aria-label="Día"><option value="">Día</option></select>
+              <select id="mes" name="mes" aria-label="Mes"><option value="">Mes</option></select>
+            </div>
+          </div>
+
+          <!-- campo trampa: los humanos no lo ven -->
+          <div class="hp" aria-hidden="true">
+            <label for="web">No completar</label>
+            <input type="text" id="web" name="web" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="consent">
+            <input type="checkbox" id="consent" name="consent" required>
+            <label for="consent">Acepto recibir promociones y novedades de <span data-nombre>La Brasa</span> por WhatsApp. Puedo darme de baja cuando quiera.</label>
+          </div>
+          <p class="error-msg" id="err-general" role="alert" style="margin:-12px 0 16px"></p>
+
+          <button class="boton" type="submit" id="enviar">Sumar mi sello</button>
+          <p class="legal">Usamos tus datos solo para el Club y para enviarte novedades del local. No los compartimos con nadie.</p>
+        </form>
+      </div>
+
+      <!-- CONFIRMACIÓN -->
+      <div id="exito" aria-live="polite">
+        <h2 class="exito-titulo" id="exito-titulo" tabindex="-1">¡Listo!</h2>
+        <p class="exito-texto" id="exito-texto"></p>
+
+        <div class="sellos" id="sellos" role="img" aria-label=""></div>
+        <p class="sellos-cuenta" id="sellos-cuenta"></p>
+
+        <div class="canje" id="canje">Mostrale esta pantalla al mozo para canjear tu plato libre. Acordate de pedir una bebida.</div>
+
+        <p class="paso-wsp">Un último paso: guardá nuestro número para que te lleguen las promos.</p>
+        <button class="boton" type="button" id="guardar-y-abrir">Guardar contacto y abrir WhatsApp</button>
+        <a class="link-simple" id="solo-wsp" href="#" target="_blank" rel="noopener">Solo abrir WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <ul class="beneficios">
+    <li><strong>Un sello por visita</strong><span>Escaneá el QR cuando pidas la cuenta y el sello se suma solo.</span></li>
+    <li><strong>Promos solo para socios</strong><span>Descuentos que no publicamos en ningún otro lado.</span></li>
+    <li><strong>Un regalo en tu cumpleaños</strong><span>Si nos dejás la fecha, te avisamos con tiempo.</span></li>
+  </ul>
+
+  <p class="pie"><span data-nombre>La Brasa</span> · Club de clientes</p>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
