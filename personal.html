@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel del local</title>
+<meta name="theme-color" content="#6E1423">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="personal.css">
+</head>
+<body>
+
+<!-- ============ INGRESO CON PIN ============ -->
+<div class="wrap" id="vista-pin">
+  <p class="marca" id="marca-login">La Brasa</p>
+  <h1 class="titulo-personal">Panel del local</h1>
+
+  <section class="ticket">
+    <div class="ticket-cuerpo">
+      <form id="form-pin" novalidate>
+        <div class="campo">
+          <label for="pin">PIN</label>
+          <input type="password" id="pin" inputmode="numeric" autocomplete="off" maxlength="12" required>
+          <p class="error-msg" id="err-pin" role="alert"></p>
+        </div>
+        <button class="boton" type="submit" id="btn-pin">Entrar</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PANEL ============ -->
+<div class="app" id="app" hidden>
+
+  <header class="barra">
+    <button type="button" class="btn-menu" id="btn-menu" aria-controls="lateral" aria-expanded="false" aria-label="Abrir menú">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <h1 class="barra-titulo" id="titulo-seccion">Canjear premio</h1>
+  </header>
+
+  <nav class="lateral" id="lateral" aria-label="Secciones del panel">
+    <p class="lateral-marca" id="marca-lateral">La Brasa</p>
+    <ul class="nav-lista">
+      <li><button type="button" class="nav-item activo" data-seccion="canjear">Canjear premio</button></li>
+      <li data-solo-dueno hidden><button type="button" class="nav-item" data-seccion="estadisticas">Estadísticas</button></li>
+      <li data-solo-dueno hidden><button type="button" class="nav-item" data-seccion="clientes">Clientes</button></li>
+    </ul>
+    <div class="lateral-pie">
+      <span class="rol-etiqueta" id="rol-etiqueta"></span>
+      <button type="button" class="link-claro" id="btn-salir">Salir</button>
+    </div>
+  </nav>
+
+  <div class="velo" id="velo" hidden></div>
+
+  <main class="contenido">
+    <div class="contenido-interno">
+
+      <!-- ===== CANJEAR PREMIO ===== -->
+      <section id="sec-canjear" aria-labelledby="titulo-seccion">
+        <div class="panel-card angosto">
+
+          <div id="canj-buscar">
+            <form id="form-buscar" novalidate>
+              <div class="campo">
+                <label for="telefono">WhatsApp del cliente</label>
+                <input type="tel" id="telefono" inputmode="tel" autocomplete="off" placeholder="Ej: 11 2345 6789" required>
+                <p class="error-msg" id="err-telefono" role="alert"></p>
+              </div>
+              <button class="boton" type="submit" id="btn-buscar">Buscar tarjeta</button>
+            </form>
+          </div>
+
+          <div id="canj-resultado" hidden aria-live="polite">
+            <h2 class="exito-titulo" id="res-titulo" tabindex="-1"></h2>
+            <p class="exito-texto" id="res-texto"></p>
+
+            <div class="sellos" id="res-sellos" role="img" aria-label=""></div>
+            <p class="sellos-cuenta" id="res-cuenta"></p>
+
+            <div id="bloque-canje" hidden>
+              <p class="aviso-bebida">Antes de canjear, verificá que el cliente pida una bebida.</p>
+
+              <div class="campo">
+                <label for="atendio">Atendió <span class="opcional">(opcional)</span></label>
+                <input type="text" id="atendio" autocomplete="off" maxlength="40">
+              </div>
+
+              <div id="paso-canjear">
+                <button class="boton" type="button" id="btn-canjear">Canjear plato libre</button>
+              </div>
+              <div id="paso-confirmar" hidden>
+                <p class="confirmar-texto">¿Confirmás el canje? La tarjeta vuelve a 0.</p>
+                <button class="boton confirmar" type="button" id="btn-confirmar">Sí, canjear</button>
+                <button class="boton neutro" type="button" id="btn-cancelar">Cancelar</button>
+              </div>
+            </div>
+
+            <p class="error-msg" id="err-resultado" role="alert"></p>
+            <button class="boton neutro" type="button" id="btn-otro">Buscar otro cliente</button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ===== ESTADÍSTICAS (solo dueño) ===== -->
+      <section id="sec-estadisticas" hidden aria-labelledby="titulo-seccion">
+        <div class="fila-acciones">
+          <p class="estado-carga" id="stats-estado" role="status"></p>
+          <button type="button" class="boton-chico" id="btn-actualizar-stats">Actualizar</button>
+        </div>
+
+        <div class="datos" id="stats-cards"></div>
+
+        <div class="panel-card">
+          <h2 class="subtitulo">Actividad por semana</h2>
+          <div class="leyenda">
+            <span><i class="muestra muestra-sellos"></i>Sellos entregados</span>
+            <span><i class="muestra muestra-nuevos"></i>Clientes nuevos</span>
+            <span><i class="muestra muestra-volvieron"></i>Clientes que volvieron</span>
+          </div>
+          <div class="grafico" id="grafico"></div>
+        </div>
+
+        <div class="panel-card">
+          <h2 class="subtitulo">Clientes que volvieron a sumar sello</h2>
+          <p class="nota" id="recurrentes-nota"></p>
+          <ul class="cumples" id="recurrentes-lista"></ul>
+        </div>
+
+        <div class="panel-card">
+          <h2 class="subtitulo" id="cumples-titulo">Cumpleaños del mes</h2>
+          <ul class="cumples" id="cumples-lista"></ul>
+        </div>
+      </section>
+
+      <!-- ===== CLIENTES (solo dueño) ===== -->
+      <section id="sec-clientes" hidden aria-labelledby="titulo-seccion">
+        <div class="fila-acciones">
+          <p class="estado-carga" id="clientes-estado" role="status"></p>
+          <div class="grupo-botones">
+            <button type="button" class="boton-chico" id="btn-actualizar-clientes">Actualizar</button>
+            <button type="button" class="boton-chico principal" id="btn-exportar">Exportar CSV</button>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <div class="campo">
+            <label for="buscador-clientes">Buscar por nombre o teléfono</label>
+            <input type="text" id="buscador-clientes" autocomplete="off">
+          </div>
+          <p class="sellos-cuenta" id="clientes-cuenta"></p>
+
+          <div class="tabla-wrap">
+            <table class="tabla">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">WhatsApp</th>
+                  <th scope="col">Sellos</th>
+                  <th scope="col">Última visita</th>
+                  <th scope="col">Canjes</th>
+                </tr>
+              </thead>
+              <tbody id="clientes-filas"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script src="personal.js"></script>
+</body>
+</html>
