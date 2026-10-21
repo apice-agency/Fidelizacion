@@ -1,0 +1,44 @@
+/* Estilos extra del formulario del cliente. Se carga después de styles.css. */
+
+[hidden] { display: none !important; }
+
+/* ================= Incentivo de WhatsApp ================= */
+.bloque-wsp {
+  margin: 0 0 18px;
+  padding: 18px;
+  border: 2px solid var(--mostaza);
+  border-radius: 14px;
+  background: #FFF6DD;
+}
+.wsp-titulo {
+  margin: 0 0 6px;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  line-height: 1.15;
+  color: var(--tinto);
+}
+.wsp-texto { margin: 0 0 14px; font-size: .95rem; color: var(--tinta); }
+.wsp-hecho { margin: 0; font-weight: 600; color: var(--chimichurri); }
+
+/* ================= Extras (contacto, canal) ================= */
+.extras { text-align: center; }
+.boton-link {
+  display: block;
+  margin: 4px auto 0;
+  padding: 10px 6px;
+  border: 0;
+  background: none;
+  font: 600 .95rem var(--texto);
+  color: var(--tinto);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.boton-link:focus-visible { outline: 3px solid var(--mostaza); outline-offset: 2px; }
+.ayuda-contacto {
+  margin: 4px 0 8px;
+  font-size: .88rem;
+  line-height: 1.4;
+  color: var(--tinta-suave);
+  text-align: left;
+}
+.extras .link-simple { margin-top: 6px; }

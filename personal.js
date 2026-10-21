@@ -1,6 +1,10 @@
 /* ============ CONFIGURACIÓN ============ */
 const CONFIG = {
   nombreLocal: "La Brasa",
+  // Página del formulario del cliente. Si urlFormulario queda vacío, se arma sola
+  // usando esta página, que tiene que estar en la misma carpeta que el panel.
+  paginaFormulario: "landing-fidelizacion-v2.html",
+  urlFormulario: "https://fidelizacion-mu.vercel.app/",
   // Misma URL de Apps Script que usa el formulario público (script.js)
   endpoint: "https://script.google.com/macros/s/AKfycbw1XMosN14jNwn2Xq5TP0IuJmMiseiFUQ3muQUK5q2ib-zBeMaimauGaUxMJMh5zDBqSQ/exec"
 };
@@ -113,6 +117,7 @@ function entrarAlPanel(rol) {
 }
 
 function salirDelPanel(mensaje) {
+  detenerQr();
   pinActual = "";
   rolActual = "";
   datosPanel = null;
@@ -179,10 +184,11 @@ document.addEventListener("keydown", (e) => {
 });
 esEscritorio.addEventListener("change", (e) => menu(e.matches));
 
-const TITULOS = { canjear: "Canjear premio", estadisticas: "Estadísticas", clientes: "Clientes" };
+const TITULOS = { canjear: "Canjear premio", qr: "QR del día", estadisticas: "Estadísticas", clientes: "Clientes", recuperar: "Recuperar clientes" };
+const SECCIONES_DUENO = ["estadisticas", "clientes", "recuperar"];
 
 function irASeccion(nombre) {
-  if (nombre !== "canjear" && rolActual !== "dueno") nombre = "canjear";
+  if (SECCIONES_DUENO.indexOf(nombre) !== -1 && rolActual !== "dueno") nombre = "canjear";
 
   Object.keys(TITULOS).forEach((s) => { el("sec-" + s).hidden = (s !== nombre); });
   document.querySelectorAll(".nav-item").forEach((b) => {
@@ -193,7 +199,8 @@ function irASeccion(nombre) {
   texto("titulo-seccion", TITULOS[nombre]);
 
   if (!esEscritorio.matches) menu(false);
-  if (nombre !== "canjear") cargarDatos(false);
+  if (nombre === "qr") iniciarQr(); else detenerQr();
+  if (SECCIONES_DUENO.indexOf(nombre) !== -1) cargarDatos(false);
   window.scrollTo(0, 0);
 }
 document.querySelectorAll(".nav-item").forEach((b) => {
@@ -342,32 +349,95 @@ el("btn-otro").addEventListener("click", () => {
   el("telefono").focus();
 });
 
+/* ============ QR DEL DÍA (personal y dueño) ============ */
+let temporizadorQr = null;
+let qrActivo = false;
+let qrActual = "";
+
+function urlDelFormulario(codigo) {
+  const base = CONFIG.urlFormulario
+    ? CONFIG.urlFormulario
+    : new URL(CONFIG.paginaFormulario, location.href).href;
+  const u = new URL(base);
+  u.searchParams.set("k", codigo);
+  return u.href;
+}
+
+function detenerQr() {
+  qrActivo = false;
+  clearTimeout(temporizadorQr);
+  temporizadorQr = null;
+}
+
+function textoCambio(segundos) {
+  const h = Math.floor(segundos / 3600);
+  const m = Math.floor((segundos % 3600) / 60);
+  return h > 0 ? h + " h " + m + " min" : Math.max(m, 1) + " min";
+}
+
+async function cargarQr() {
+  if (!qrActivo) return;
+  clearTimeout(temporizadorQr);
+  texto("err-qr", "");
+  try {
+    const r = await llamar("qr");
+    if (!qrActivo) return;
+    if (!r || !r.ok) {
+      if (r && r.error === "pin_incorrecto") { salirDelPanel(MENSAJES.pin_incorrecto); return; }
+      texto("err-qr", mensajeDe(r));
+      temporizadorQr = setTimeout(cargarQr, 30000);       // reintenta solo
+      return;
+    }
+    if (r.k !== qrActual) {
+      QR.dibujar(el("qr-canvas"), urlDelFormulario(r.k), 320);
+      qrActual = r.k;
+    }
+    el("qr-cargando").hidden = true;
+    texto("qr-estado", "QR de hoy. Se actualiza solo en " + textoCambio(r.cambiaEn) + ".");
+    // Vuelve a pedirlo apenas cambia el día (o cada hora, por si el celular durmió)
+    const espera = Math.min((r.cambiaEn + 5) * 1000, 3600000);
+    temporizadorQr = setTimeout(cargarQr, espera);
+  } catch (err) {
+    if (!qrActivo) return;
+    texto("err-qr", mensajeDe(null));
+    temporizadorQr = setTimeout(cargarQr, 30000);
+  }
+}
+
+function iniciarQr() {
+  qrActivo = true;
+  qrActual = "";
+  el("qr-cargando").hidden = false;
+  texto("qr-estado", "");
+  cargarQr();
+}
+el("btn-qr-actualizar").addEventListener("click", () => { qrActual = ""; cargarQr(); });
+// Si el celular estuvo en reposo, al volver a la pantalla se verifica que el QR siga vigente
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && qrActivo) cargarQr();
+});
+
 /* ============ ESTADÍSTICAS Y CLIENTES (solo dueño) ============ */
 async function cargarDatos(forzar) {
   if (cargando) return;
   if (datosPanel && !forzar) return;
 
   cargando = true;
-  texto("stats-estado", "Cargando…");
-  texto("clientes-estado", "Cargando…");
+  estadoDatos("Cargando…");
   try {
     const r = await llamar("estadisticas");
     if (r && r.ok) {
       datosPanel = r;
-      texto("stats-estado", "");
-      texto("clientes-estado", "");
+      estadoDatos("");
       renderEstadisticas();
       renderClientes();
+      renderRecuperar();
     } else {
       if (r && r.error === "pin_incorrecto") { salirDelPanel(MENSAJES.pin_incorrecto); return; }
-      const m = mensajeDe(r);
-      texto("stats-estado", m);
-      texto("clientes-estado", m);
+      estadoDatos(mensajeDe(r));
     }
   } catch (err) {
-    const m = mensajeDe(null);
-    texto("stats-estado", m);
-    texto("clientes-estado", m);
+    estadoDatos(mensajeDe(null));
   } finally {
     cargando = false;
   }
@@ -391,6 +461,7 @@ function renderEstadisticas() {
     { n: d.resumen.canjes,    t: "Premios canjeados" },
     { n: d.resumen.completas, t: "Tarjetas completas sin canjear" },
     { n: nuevosSemana,        t: "Clientes nuevos esta semana" },
+    { n: (d.resumen.wsp || 0), t: "Tocaron el botón de WhatsApp" },
     { n: recurrentes.length,  t: "Clientes que volvieron a sumar sello" },
     { n: sinVolver,           t: "Sin volver hace 7 días o más" }
   ];
@@ -588,6 +659,117 @@ el("btn-exportar").addEventListener("click", () => {
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 });
+
+/* ---------- Recuperar clientes ---------- */
+function estadoDatos(mensaje) {
+  ["stats-estado", "clientes-estado", "recuperar-estado"].forEach((id) => texto(id, mensaje));
+}
+
+// Para no escribirle dos veces a la misma persona por el mismo faltazo, se recuerda
+// (en este dispositivo) a quién ya se le abrió el mensaje. Si el cliente vuelve y suma
+// un sello, cambia su fecha de última visita y vuelve a quedar como "no contactado".
+const CLAVE_CONTACTADOS = "club_contactados";
+
+function leerContactados() {
+  try { return JSON.parse(localStorage.getItem(CLAVE_CONTACTADOS) || "{}") || {}; } catch (e) { return {}; }
+}
+function guardarContactado(telefono, ultimo) {
+  const c = leerContactados();
+  c[telefono] = ultimo;
+  try { localStorage.setItem(CLAVE_CONTACTADOS, JSON.stringify(c)); } catch (e) { /* sin almacenamiento */ }
+}
+
+// Mensaje que se abre en WhatsApp. Editá estos textos para cambiarlo.
+function mensajeRecuperacion(c, meta) {
+  const nombre = c.nombre.split(" ")[0];
+  const inicio = "Hola " + nombre + "! Hace unos días que no te vemos por " + CONFIG.nombreLocal + ". ";
+  if (c.sellos >= meta) {
+    return inicio + "Tu plato libre te está esperando, pasá a canjearlo (acordate de pedir una bebida). Te esperamos!";
+  }
+  if (c.sellos <= 0) {
+    return inicio + "Te esperamos para seguir sumando sellos hacia tu plato libre!";
+  }
+  const faltan = meta - c.sellos;
+  return inicio + (faltan === 1 ? "Te falta 1 sello" : "Te faltan " + faltan + " sellos") + " para tu plato libre. Te esperamos!";
+}
+
+function crearEtiquetaContactado() {
+  const t = document.createElement("span");
+  t.className = "etiqueta-contactado";
+  t.textContent = "Contactado";
+  return t;
+}
+
+function renderRecuperar() {
+  if (!datosPanel) return;
+  const d = datosPanel;
+  const umbral = Number(el("umbral-dias").value) || 7;
+  const contactados = leerContactados();
+
+  // Los que hace menos tiempo que no vienen van primero: son los más fáciles de recuperar.
+  const lista = d.clientes
+    .map((c) => ({ c: c, dias: c.ultimo ? diasEntre(c.ultimo, d.hoy) : -1 }))
+    .filter((x) => x.dias >= umbral)
+    .sort((a, b) => a.dias - b.dias);
+
+  texto("recuperar-cuenta", lista.length
+    ? lista.length + (lista.length === 1 ? " cliente" : " clientes") + " sin venir hace " + umbral + " días o más."
+    : "");
+
+  const ul = el("recuperar-lista");
+  ul.innerHTML = "";
+
+  if (!lista.length) {
+    const li = document.createElement("li");
+    li.className = "vacio";
+    li.textContent = "Ningún cliente lleva " + umbral + " días o más sin venir.";
+    ul.appendChild(li);
+    return;
+  }
+
+  lista.forEach((x) => {
+    const c = x.c;
+    const li = document.createElement("li");
+
+    const info = document.createElement("div");
+    info.className = "rec-info";
+    const nombre = document.createElement("div");
+    nombre.className = "rec-nombre";
+    nombre.textContent = c.nombre;
+    const detalle = document.createElement("div");
+    detalle.className = "rec-detalle";
+    detalle.textContent = "Hace " + x.dias + (x.dias === 1 ? " día" : " días") +
+      " que no viene. " + c.sellos + " de " + d.meta + " sellos.";
+    info.appendChild(nombre);
+    info.appendChild(detalle);
+
+    const acciones = document.createElement("div");
+    acciones.className = "rec-acciones";
+    const yaContactado = (contactados[c.telefono] === c.ultimo);
+    if (yaContactado) acciones.appendChild(crearEtiquetaContactado());
+
+    const enlace = document.createElement("a");
+    enlace.className = "boton-chico principal";
+    enlace.href = "https://wa.me/" + c.telefono + "?text=" + encodeURIComponent(mensajeRecuperacion(c, d.meta));
+    enlace.target = "_blank";
+    enlace.rel = "noopener";
+    enlace.textContent = yaContactado ? "Enviar de nuevo" : "Enviar mensaje";
+    enlace.setAttribute("aria-label", enlace.textContent + " a " + c.nombre);
+    enlace.addEventListener("click", () => {
+      guardarContactado(c.telefono, c.ultimo);
+      if (!acciones.querySelector(".etiqueta-contactado")) acciones.insertBefore(crearEtiquetaContactado(), enlace);
+      enlace.textContent = "Enviar de nuevo";
+      enlace.setAttribute("aria-label", "Enviar de nuevo a " + c.nombre);
+    });
+    acciones.appendChild(enlace);
+
+    li.appendChild(info);
+    li.appendChild(acciones);
+    ul.appendChild(li);
+  });
+}
+el("umbral-dias").addEventListener("change", renderRecuperar);
+el("btn-actualizar-recuperar").addEventListener("click", () => cargarDatos(true));
 
 /* ============ Inicio ============ */
 (async function inicio() {

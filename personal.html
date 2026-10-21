@@ -49,8 +49,10 @@
     <p class="lateral-marca" id="marca-lateral">La Brasa</p>
     <ul class="nav-lista">
       <li><button type="button" class="nav-item activo" data-seccion="canjear">Canjear premio</button></li>
+      <li><button type="button" class="nav-item" data-seccion="qr">QR del día</button></li>
       <li data-solo-dueno hidden><button type="button" class="nav-item" data-seccion="estadisticas">Estadísticas</button></li>
       <li data-solo-dueno hidden><button type="button" class="nav-item" data-seccion="clientes">Clientes</button></li>
+      <li data-solo-dueno hidden><button type="button" class="nav-item" data-seccion="recuperar">Recuperar clientes</button></li>
     </ul>
     <div class="lateral-pie">
       <span class="rol-etiqueta" id="rol-etiqueta"></span>
@@ -107,6 +109,20 @@
             <button class="boton neutro" type="button" id="btn-otro">Buscar otro cliente</button>
           </div>
 
+        </div>
+      </section>
+
+      <!-- ===== QR DEL DÍA (personal y dueño) ===== -->
+      <section id="sec-qr" hidden aria-labelledby="titulo-seccion">
+        <div class="panel-card angosto qr-card">
+          <p class="qr-indicacion">Mostrale este QR al cliente para que lo escanee con la cámara del celular.</p>
+          <div class="qr-marco">
+            <canvas id="qr-canvas" width="320" height="320" role="img" aria-label="Código QR para sumar el sello"></canvas>
+            <p class="qr-cargando" id="qr-cargando">Generando QR…</p>
+          </div>
+          <p class="qr-estado" id="qr-estado" role="status"></p>
+          <p class="error-msg" id="err-qr" role="alert"></p>
+          <button type="button" class="boton neutro" id="btn-qr-actualizar">Actualizar QR</button>
         </div>
       </section>
 
@@ -175,10 +191,33 @@
         </div>
       </section>
 
+      <!-- ===== RECUPERAR CLIENTES (solo dueño) ===== -->
+      <section id="sec-recuperar" hidden aria-labelledby="titulo-seccion">
+        <div class="fila-acciones">
+          <p class="estado-carga" id="recuperar-estado" role="status"></p>
+          <button type="button" class="boton-chico" id="btn-actualizar-recuperar">Actualizar</button>
+        </div>
+
+        <div class="panel-card">
+          <div class="campo campo-corto">
+            <label for="umbral-dias">Sin venir hace al menos</label>
+            <select id="umbral-dias">
+              <option value="7" selected>7 días</option>
+              <option value="14">14 días</option>
+              <option value="30">30 días</option>
+              <option value="60">60 días</option>
+            </select>
+          </div>
+          <p class="sellos-cuenta" id="recuperar-cuenta"></p>
+          <ul class="lista-recuperar" id="recuperar-lista"></ul>
+        </div>
+      </section>
+
     </div>
   </main>
 </div>
 
+<script src="qr.js"></script>
 <script src="personal.js"></script>
 </body>
 </html>

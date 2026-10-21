@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="whatsapp.css">
 </head>
 <body>
 <main class="wrap" id="app">
@@ -77,11 +78,23 @@
         <div class="sellos" id="sellos" role="img" aria-label=""></div>
         <p class="sellos-cuenta" id="sellos-cuenta"></p>
 
-        <div class="canje" id="canje">Mostrale esta pantalla al mozo para canjear tu plato libre. Acordate de pedir una bebida.</div>
+        <div class="canje" id="canje">Avisale al mozo que completaste la tarjeta: te va a pedir tu número de WhatsApp para canjear tu plato libre. Acordate de pedir una bebida.</div>
 
-        <p class="paso-wsp">Un último paso: guardá nuestro número para que te lleguen las promos.</p>
-        <button class="boton" type="button" id="guardar-y-abrir">Guardar contacto y abrir WhatsApp</button>
-        <a class="link-simple" id="solo-wsp" href="#" target="_blank" rel="noopener">Solo abrir WhatsApp</a>
+        <!-- INCENTIVO DE WHATSAPP -->
+        <div class="bloque-wsp" id="bloque-wsp">
+          <p class="wsp-titulo" id="wsp-titulo">Mandanos un mensaje y ganá 1 sello extra</p>
+          <p class="wsp-texto" id="wsp-texto">Te respondemos al instante con el link de nuestro canal para que te enteres primero de las promos.</p>
+          <a class="boton" id="btn-wsp" href="#" target="_blank" rel="noopener">Mandar mensaje por WhatsApp</a>
+          <p class="wsp-hecho" id="wsp-hecho" hidden></p>
+        </div>
+
+        <!-- EXTRAS -->
+        <div class="extras">
+          <button type="button" class="boton-link" id="guardar-contacto">Guardar el contacto de <span data-nombre>La Brasa</span></button>
+          <p class="ayuda-contacto" id="ayuda-contacto" hidden></p>
+          <a class="link-simple" id="abrir-wsp" href="#" target="_blank" rel="noopener" hidden>Abrir WhatsApp</a>
+          <a class="link-simple" id="seguir-canal" href="#" target="_blank" rel="noopener" hidden>Seguir el canal de novedades</a>
+        </div>
       </div>
     </div>
   </section>

@@ -283,3 +283,65 @@ body.en-panel { background: var(--papel); color: var(--tinta); }
 /* ================= Tercera serie del gráfico: clientes que volvieron ================= */
 .muestra-volvieron { background: var(--chimichurri); }
 .grafico .barra-volvieron { fill: var(--chimichurri); }
+
+/* ================= Recuperar clientes ================= */
+.campo-corto { max-width: 260px; }
+
+.lista-recuperar { list-style: none; margin: 0; padding: 0; }
+.lista-recuperar li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--borde);
+}
+.lista-recuperar li:first-child { border-top: 0; }
+.lista-recuperar .vacio { color: var(--tinta-suave); display: block; }
+.rec-info { min-width: 0; }
+.rec-nombre { font-weight: 700; overflow-wrap: anywhere; }
+.rec-detalle { font-size: .9rem; color: var(--tinta-suave); }
+.rec-acciones { display: flex; align-items: center; gap: 10px; }
+.etiqueta-contactado { font-size: .82rem; font-weight: 700; color: var(--chimichurri); }
+
+a.boton-chico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* ================= QR del día ================= */
+.qr-card { text-align: center; }
+.qr-indicacion { margin: 0 0 16px; font-size: 1rem; line-height: 1.4; color: var(--tinta); }
+.qr-marco {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(100%, 360px);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 14px;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.qr-marco canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.qr-cargando {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  background: #fff;
+  font-size: .95rem;
+  color: var(--tinta-suave);
+}
+.qr-estado { min-height: 1.4em; margin: 0 0 12px; font-size: .92rem; color: var(--tinta-suave); }
