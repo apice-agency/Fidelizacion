@@ -4,7 +4,7 @@ const CONFIG = {
   // Página del formulario del cliente. Si urlFormulario queda vacío, se arma sola
   // usando esta página, que tiene que estar en la misma carpeta que el panel.
   paginaFormulario: "landing-fidelizacion-v2.html",
-  urlFormulario: "https://fidelizacion-mu.vercel.app/",
+  urlFormulario: "",
   // Misma URL de Apps Script que usa el formulario público (script.js)
   endpoint: "https://script.google.com/macros/s/AKfycbw1XMosN14jNwn2Xq5TP0IuJmMiseiFUQ3muQUK5q2ib-zBeMaimauGaUxMJMh5zDBqSQ/exec"
 };
@@ -363,7 +363,23 @@ function urlDelFormulario(codigo) {
   return u.href;
 }
 
+// Mantiene la pantalla encendida mientras el mozo muestra el QR
+let bloqueoPantalla = null;
+async function mantenerPantalla() {
+  try {
+    if ("wakeLock" in navigator && !bloqueoPantalla) {
+      bloqueoPantalla = await navigator.wakeLock.request("screen");
+      bloqueoPantalla.addEventListener("release", () => { bloqueoPantalla = null; });
+    }
+  } catch (err) { /* el celular no lo permite: la pantalla se apaga como siempre */ }
+}
+function soltarPantalla() {
+  try { if (bloqueoPantalla) bloqueoPantalla.release(); } catch (err) { /* nada */ }
+  bloqueoPantalla = null;
+}
+
 function detenerQr() {
+  soltarPantalla();
   qrActivo = false;
   clearTimeout(temporizadorQr);
   temporizadorQr = null;
@@ -406,6 +422,7 @@ async function cargarQr() {
 
 function iniciarQr() {
   qrActivo = true;
+  mantenerPantalla();
   qrActual = "";
   el("qr-cargando").hidden = false;
   texto("qr-estado", "");
@@ -414,7 +431,7 @@ function iniciarQr() {
 el("btn-qr-actualizar").addEventListener("click", () => { qrActual = ""; cargarQr(); });
 // Si el celular estuvo en reposo, al volver a la pantalla se verifica que el QR siga vigente
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && qrActivo) cargarQr();
+  if (!document.hidden && qrActivo) { mantenerPantalla(); cargarQr(); }
 });
 
 /* ============ ESTADÍSTICAS Y CLIENTES (solo dueño) ============ */
@@ -782,3 +799,8 @@ el("btn-actualizar-recuperar").addEventListener("click", () => cargarDatos(true)
     salirDelPanel("");
   }
 })();
+
+/* ============ App instalable (PWA) ============ */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => { navigator.serviceWorker.register("sw.js").catch(() => {}); });
+}

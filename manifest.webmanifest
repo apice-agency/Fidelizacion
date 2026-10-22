@@ -1,0 +1,19 @@
+{
+  "name": "Panel La Brasa",
+  "short_name": "La Brasa",
+  "description": "Panel del Club de clientes: canjear premios y mostrar el QR del día.",
+  "id": "./personal.html",
+  "start_url": "./personal.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#6E1423",
+  "theme_color": "#6E1423",
+  "lang": "es-AR",
+  "icons": [
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
