@@ -4,7 +4,7 @@ const CONFIG = {
   // Página del formulario del cliente. Si urlFormulario queda vacío, se arma sola
   // usando esta página, que tiene que estar en la misma carpeta que el panel.
   paginaFormulario: "landing-fidelizacion-v2.html",
-  urlFormulario: "",
+  urlFormulario: "https://fidelizacion-mu.vercel.app/",
   // Misma URL de Apps Script que usa el formulario público (script.js)
   endpoint: "https://script.google.com/macros/s/AKfycbw1XMosN14jNwn2Xq5TP0IuJmMiseiFUQ3muQUK5q2ib-zBeMaimauGaUxMJMh5zDBqSQ/exec"
 };
