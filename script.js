@@ -6,6 +6,9 @@ const CONFIG = {
   mensajeBienvenida: "Hola! Me sumé al Club desde el QR. Quiero recibir las promos.",
   // Link del canal de WhatsApp del local (opcional). Si lo dejás vacío, el botón no aparece.
   canalUrl: "",
+  // Versión de los textos legales (privacidad.html y terminos.html). Cambiala cuando los modifiques:
+  // el sistema guarda con qué versión aceptó cada cliente.
+  versionTextos: "2026-10",
   // URL de la implementación de Apps Script (termina en /exec).
   // Si queda vacío, la página funciona en modo demo y no guarda nada.
   endpoint: "https://script.google.com/macros/s/AKfycbw1XMosN14jNwn2Xq5TP0IuJmMiseiFUQ3muQUK5q2ib-zBeMaimauGaUxMJMh5zDBqSQ/exec"
@@ -127,7 +130,7 @@ form.addEventListener("submit", async (e) => {
   } else marcarError("whatsapp", "err-whatsapp", "");
 
   if (!form.consent.checked) {
-    marcarError(null, "err-general", "Para sumarte tenemos que tener tu permiso para escribirte.");
+    marcarError(null, "err-general", "Para sumarte tenés que aceptar los términos, la política de privacidad y recibir novedades por WhatsApp.");
     ok = false;
   } else marcarError(null, "err-general", "");
 
@@ -146,6 +149,7 @@ form.addEventListener("submit", async (e) => {
     cumple_dia: dia.value,
     cumple_mes: mes.value,
     consentimiento: true,
+    version_textos: CONFIG.versionTextos,
     origen: "qr",
     k: codigoQR
   };

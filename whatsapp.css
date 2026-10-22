@@ -42,3 +42,7 @@
   text-align: left;
 }
 .extras .link-simple { margin-top: 6px; }
+
+/* Links a los textos legales dentro del formulario */
+.consent a, .legal a { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.consent a:focus-visible, .legal a:focus-visible { outline: 3px solid var(--mostaza, #E0A526); outline-offset: 2px; border-radius: 2px; }
